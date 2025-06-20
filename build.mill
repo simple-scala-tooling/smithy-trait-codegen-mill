@@ -1,42 +1,36 @@
 package build
+
 import mill._, scalalib._, publish._
 import mill.main.BuildInfo.millVersion
+import com.goyeau.mill.git.GitVersionedPublishModule
 
-object myplugin extends ScalaModule with PublishModule {
-  def scalaVersion = "2.13.8"
+import $meta._
 
-  // Set the `platformSuffix` so the name indicates what Mill version it is compiled for
+object smithyTraitCodegen extends ScalaModule with SonatypeCentralPublishModule with GitVersionedPublishModule {
+
+  def artifactName = "smithy-trait-codegen-mill"
+
+  def scalaVersion = "2.13.16"
+
   def platformSuffix = "_mill" + mill.main.BuildInfo.millBinPlatform
 
-  // Depend on `mill-dist` so we can compile against Mill APIs
-  def ivyDeps = Agg(ivy"com.lihaoyi:mill-dist:$millVersion")
+  def ivyDeps = Agg(
+    ivy"software.amazon.smithy:smithy-model:1.56.0",
+    ivy"software.amazon.smithy:smithy-build:1.56.0",
+    ivy"software.amazon.smithy:smithy-trait-codegen:1.56.0",
+  )
 
-  // Testing Config, with necessary setup for unit/integration/example tests
-  object test extends ScalaTests with TestModule.Utest {
-    def ivyDeps = Agg(ivy"com.lihaoyi::mill-testkit:$millVersion")
-    def forkEnv = Map("MILL_EXECUTABLE_PATH" -> millExecutable.assembly().path.toString)
-
-    // Create a Mill executable configured for testing our plugin
-    object millExecutable extends JavaModule {
-      def ivyDeps = Agg(ivy"com.lihaoyi:mill-dist:$millVersion")
-      def mainClass = Some("mill.runner.client.MillClientMain")
-      def resources = Task {
-        val p = Task.dest / "mill/local-test-overrides" / s"com.lihaoyi-${myplugin.artifactId()}"
-        os.write(p, myplugin.localClasspath().map(_.path).mkString("\n"), createFolders = true)
-        Seq(PathRef(Task.dest))
-      }
-    }
-  }
-
-  // Publishing Config
-  def publishVersion = "0.0.1"
+  def compileIvyDeps = super.compileIvyDeps() ++ Agg(
+    ivy"com.lihaoyi::mill-main:$millVersion",
+    ivy"com.lihaoyi::mill-scalalib:$millVersion",
+  )
 
   def pomSettings = PomSettings(
-    description = "Line Count Mill Plugin",
-    organization = "com.lihaoyi",
-    url = "https://github.com/lihaoyi/myplugin",
+    description = "Smithy Trait Codegen Mill Plugin",
+    organization = "io.github.simple-scala-tooling",
+    url = "https://github.com/simple-scala-tooling/smithy-trait-codegen-mill",
     licenses = Seq(License.MIT),
-    versionControl = VersionControl.github("lihaoyi", "myplugin"),
+    versionControl = VersionControl.github("simple-scala-tooling", "smithy-trait-codegen-mill"),
     developers = Seq(Developer("lihaoyi", "Li Haoyi", "https://github.com/lihaoyi"))
   )
 }

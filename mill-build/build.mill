@@ -1,0 +1,11 @@
+import mill._
+import mill.main.BuildInfo.millVersion
+import mill.scalalib._
+
+object `package` extends MillBuildRootModule {
+
+  def ivyDeps = Agg(
+    ivy"com.goyeau::mill-git::0.2.7",
+  )
+
+}
