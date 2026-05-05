@@ -9,7 +9,10 @@ import mill.*
 import mill.scalalib.*
 import mill.scalalib.publish.*
 
-object smithyTraitCodegen extends ScalaModule, SonatypeCentralPublishModule, GitVersionedPublishModule {
+object smithyTraitCodegen
+    extends ScalaModule,
+      SonatypeCentralPublishModule,
+      GitVersionedPublishModule {
 
   def artifactName = "smithy-trait-codegen-mill"
 
@@ -20,11 +23,11 @@ object smithyTraitCodegen extends ScalaModule, SonatypeCentralPublishModule, Git
   def mvnDeps = Seq(
     mvn"software.amazon.smithy:smithy-model:1.70.0",
     mvn"software.amazon.smithy:smithy-build:1.70.0",
-    mvn"software.amazon.smithy:smithy-trait-codegen:1.70.0",
+    mvn"software.amazon.smithy:smithy-trait-codegen:1.70.0"
   )
 
   def compileMvnDeps = super.compileMvnDeps() ++ Seq(
-    mvn"com.lihaoyi::mill-libs-scalalib:${mill.api.BuildInfo.millVersion}",
+    mvn"com.lihaoyi::mill-libs-scalalib:${mill.api.BuildInfo.millVersion}"
   )
 
   def pomSettings = PomSettings(
@@ -32,7 +35,9 @@ object smithyTraitCodegen extends ScalaModule, SonatypeCentralPublishModule, Git
     organization = "io.github.simple-scala-tooling",
     url = "https://github.com/simple-scala-tooling/smithy-trait-codegen-mill",
     licenses = Seq(License.MIT),
-    versionControl = VersionControl.github("simple-scala-tooling", "smithy-trait-codegen-mill"),
-    developers = Seq(Developer("lihaoyi", "Li Haoyi", "https://github.com/lihaoyi"))
+    versionControl = VersionControl
+      .github("simple-scala-tooling", "smithy-trait-codegen-mill"),
+    developers =
+      Seq(Developer("lihaoyi", "Li Haoyi", "https://github.com/lihaoyi"))
   )
 }
