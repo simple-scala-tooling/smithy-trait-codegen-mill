@@ -8,7 +8,9 @@ object SmithyTraitCodegenPlugin extends mill.api.ExternalModule {
 
   trait SmithyTraitCodegenSettings extends ScalaModule {
     def smithyTraitCodegenSourcesDir: T[PathRef]
-    def smithyTraitCodegenDependencies: T[Seq[os.Path]] = Task(Seq.empty[os.Path])
+    def smithyTraitCodegenDependencies: T[Seq[os.Path]] = Task(
+      Seq.empty[os.Path]
+    )
     def smithyTraitCodegenJavaPackage: T[String]
     def smithyTraitCodegenNamespace: T[String]
 
