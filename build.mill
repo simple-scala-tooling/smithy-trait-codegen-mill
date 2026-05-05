@@ -18,9 +18,9 @@ object smithyTraitCodegen extends ScalaModule, SonatypeCentralPublishModule, Git
   def platformSuffix = "_mill1"
 
   def mvnDeps = Seq(
-    mvn"software.amazon.smithy:smithy-model:1.56.0",
-    mvn"software.amazon.smithy:smithy-build:1.56.0",
-    mvn"software.amazon.smithy:smithy-trait-codegen:1.56.0",
+    mvn"software.amazon.smithy:smithy-model:1.70.0",
+    mvn"software.amazon.smithy:smithy-build:1.70.0",
+    mvn"software.amazon.smithy:smithy-trait-codegen:1.70.0",
   )
 
   def compileMvnDeps = super.compileMvnDeps() ++ Seq(
