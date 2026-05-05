@@ -1,28 +1,30 @@
+//| mill-version: 1.1.6
+//| mvnDeps:
+//| - com.goyeau::mill-git::0.3.2
+
 package build
 
-import mill._, scalalib._, publish._
-import mill.main.BuildInfo.millVersion
 import com.goyeau.mill.git.GitVersionedPublishModule
+import mill.*
+import mill.scalalib.*
+import mill.scalalib.publish.*
 
-import $meta._
-
-object smithyTraitCodegen extends ScalaModule with SonatypeCentralPublishModule with GitVersionedPublishModule {
+object smithyTraitCodegen extends ScalaModule, SonatypeCentralPublishModule, GitVersionedPublishModule {
 
   def artifactName = "smithy-trait-codegen-mill"
 
-  def scalaVersion = "2.13.16"
+  def scalaVersion = "3.8.3"
 
-  def platformSuffix = "_mill" + mill.main.BuildInfo.millBinPlatform
+  def platformSuffix = "_mill1"
 
-  def ivyDeps = Agg(
-    ivy"software.amazon.smithy:smithy-model:1.56.0",
-    ivy"software.amazon.smithy:smithy-build:1.56.0",
-    ivy"software.amazon.smithy:smithy-trait-codegen:1.56.0",
+  def mvnDeps = Seq(
+    mvn"software.amazon.smithy:smithy-model:1.56.0",
+    mvn"software.amazon.smithy:smithy-build:1.56.0",
+    mvn"software.amazon.smithy:smithy-trait-codegen:1.56.0",
   )
 
-  def compileIvyDeps = super.compileIvyDeps() ++ Agg(
-    ivy"com.lihaoyi::mill-main:$millVersion",
-    ivy"com.lihaoyi::mill-scalalib:$millVersion",
+  def compileMvnDeps = super.compileMvnDeps() ++ Seq(
+    mvn"com.lihaoyi::mill-libs-scalalib:${mill.api.BuildInfo.millVersion}",
   )
 
   def pomSettings = PomSettings(
