@@ -1,21 +1,22 @@
 package org.scala.abusers
 
-import mill._
-import mill.scalalib._
-import os._
+import mill.*
+import mill.scalalib.*
 
-object SmithyTraitCodegenPlugin extends mill.define.ExternalModule {
-  def millDiscover = mill.define.Discover[this.type]
+object SmithyTraitCodegenPlugin extends mill.api.ExternalModule {
+  def millDiscover = mill.api.Discover[this.type]
 
-  trait SmithyTraitCodegenSettings extends ScalaModule {
+  trait SmithyTraitCodegenSettings extends JavaModule {
     def smithyTraitCodegenSourcesDir: T[PathRef]
-    def smithyTraitCodegenDependencies: T[Seq[os.Path]] = T(Seq.empty[os.Path])
+    def smithyTraitCodegenDependencies: T[Seq[os.Path]] = Task(
+      Seq.empty[os.Path]
+    )
     def smithyTraitCodegenJavaPackage: T[String]
     def smithyTraitCodegenNamespace: T[String]
 
-    def smithyTraitCodegenGenerateSmithy = T.task {
+    def smithyTraitCodegenGenerateSmithy = Task.Anon {
       val args = org.scala.abusers.Args(
-        targetDir = T.dest,
+        targetDir = Task.dest,
         smithySourcesDir = smithyTraitCodegenSourcesDir().path,
         dependencies = smithyTraitCodegenDependencies(),
         targetPackage = smithyTraitCodegenJavaPackage(),
@@ -26,12 +27,12 @@ object SmithyTraitCodegenPlugin extends mill.define.ExternalModule {
       output
     }
 
-    override def generatedSources = T.task {
+    override def generatedSources = Task {
       val output = smithyTraitCodegenGenerateSmithy()
       super.generatedSources() ++ Seq(PathRef(output.javaDir))
     }
 
-    override def resources: T[Seq[PathRef]] = T {
+    override def resources: T[Seq[PathRef]] = Task {
       val output = smithyTraitCodegenGenerateSmithy()
       super.resources() ++ Seq(
         smithyTraitCodegenSourcesDir(),
