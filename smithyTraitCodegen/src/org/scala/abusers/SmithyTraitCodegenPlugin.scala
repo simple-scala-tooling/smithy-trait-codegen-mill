@@ -6,7 +6,7 @@ import mill.scalalib.*
 object SmithyTraitCodegenPlugin extends mill.api.ExternalModule {
   def millDiscover = mill.api.Discover[this.type]
 
-  trait SmithyTraitCodegenSettings extends ScalaModule {
+  trait SmithyTraitCodegenSettings extends JavaModule {
     def smithyTraitCodegenSourcesDir: T[PathRef]
     def smithyTraitCodegenDependencies: T[Seq[os.Path]] = Task(
       Seq.empty[os.Path]
